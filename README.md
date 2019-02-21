@@ -48,4 +48,4 @@ If there is no entry, the defauly shown is "The Sign" by Ace of Base.
 
 This command pulls in information from the random.txt file, and passes it through the command line, using fs.
 
-
+## Video walkthrough of LIRI Bot included in the repository!
