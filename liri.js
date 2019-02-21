@@ -17,34 +17,35 @@ var spotify = new Spotify({
 var inputString = process.argv[2];
 var inputParam = process.argv.slice(3).join(" ");
 
-//if the input is concert-this
-if (inputString === "concert-this"){
-    var artistName = inputParam;
+function concertThis() {
+	var artistName = inputParam;
 
 	console.log("The next show for " + inputParam + " is...");
-    //concert info
-    axios.get("https://rest.bandsintown.com/artists/" + artistName + "/events?app_id=codingbootcamp&date=upcoming").then(
-        function(response) {
+	//concert info
+	axios.get("https://rest.bandsintown.com/artists/" + artistName + "/events?app_id=codingbootcamp&date=upcoming").then(
+		function(response) {
 			
 			if (response != undefined) {
 			
+			console.log('=============== Concert Info ================');
 			console.log("VENUE: " + response.data[0].venue.name);
-            console.log("CITY/STATE: " + response.data[0].venue.city + ", " + response.data[0].venue.region);
+			console.log("CITY/STATE: " + response.data[0].venue.city + ", " + response.data[0].venue.region);
 
-            var oldTime = response.data[0].datetime
-            var newTime = moment(oldTime).format("l");
+			var oldTime = response.data[0].datetime
+			var newTime = moment(oldTime).format("l");
 			console.log("TIME: " + newTime);
+			console.log('============= Pretty Cool Show. =============');
 			
 			}
 			
 			else {
 				console.log("Sorry, " + inputParam + "doesn't have any upcoming shows.");
 			}
-        }
+		}
 	);
-	
-//if the input is spotify-this-song
-} else if (inputString === "spotify-this-song") {
+};
+
+function findSong() {
 
 	var songName = inputParam;
 
@@ -69,19 +70,23 @@ if (inputString === "concert-this"){
 			if (err) {
 				return console.log('Error occurred: ' + err);
 			}
-			console.log("ARTIST: " + data.tracks.items[0].album.artists[0].name + "\nSONG: " + data.tracks.items[0].name + "\nPREVIEW SONG: " + data.tracks.items[0].preview_url + "\nALBUM: " + data.tracks.items[0].album.name);
+			console.log('=============== Song Info ================');
+			console.log(
+				"ARTIST: " + data.tracks.items[0].album.artists[0].name + 
+				"\nSONG: " + data.tracks.items[0].name + 
+				"\nPREVIEW SONG: " + data.tracks.items[0].preview_url + 
+				"\nALBUM: " + data.tracks.items[0].album.name);
+			console.log('=============== Neat Song! ===============');
 		});
 	};
+};
 
-//if the input is movie-this
-
-} else if (inputString === "movie-this") {
-
+function findMovie() {
 	var movieName = inputParam;
 
 	if (movieName == "") {
-        movieName = "Mr. Nobody";
-    }
+		movieName = "Mr. Nobody";
+	}
 
 	axios.get("http://www.omdbapi.com/?i=tt3896198&apikey=96586bdf&t=" + movieName).then(
 		function(response) {
@@ -99,16 +104,35 @@ if (inputString === "concert-this"){
 
 		}
 	)
-} else if (inputString === "do-what-it-says") {
+};
+
+function doItNow() {
+
 
 	fs.readFile("random.txt", "utf8", function(error, data) {
+		if (!error) {
 
-		if (error) {
-			return console.log(error);
+			var nameArr = data.split(",");
+
+			console.log(nameArr);
 		}
-
-		console.log(data.toString());
-		var doIt = data.toString().split(' ,');
-
 	});
+
+};
+
+//if the input is concert-this
+if (inputString === "concert-this"){
+	concertThis();
+	
+//if the input is spotify-this-song
+} else if (inputString === "spotify-this-song") {
+	findSong();
+
+//if the input is movie-this
+} else if (inputString === "movie-this") {
+	findMovie();
+
+//If the input is that rando one
+} else if (inputString === "do-what-it-says") {
+	doItNow();
 };
