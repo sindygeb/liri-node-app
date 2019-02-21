@@ -108,13 +108,27 @@ function findMovie() {
 
 function doItNow() {
 
-
 	fs.readFile("random.txt", "utf8", function(error, data) {
 		if (!error) {
 
 			var nameArr = data.split(",");
 
-			console.log(nameArr);
+			console.log("This is what you're pulling: " + nameArr);
+
+			newSong = nameArr[1];
+
+			spotify.search({ type: 'track', query: newSong, limit: 1  }, function(err, data) {
+				if (err) {
+					return console.log('Error occurred: ' + err);
+				}
+				console.log('=============== Song Info ================');
+				console.log(
+					"ARTIST: " + data.tracks.items[0].album.artists[0].name + 
+					"\nSONG: " + data.tracks.items[0].name + 
+					"\nPREVIEW SONG: " + data.tracks.items[0].preview_url + 
+					"\nALBUM: " + data.tracks.items[0].album.name);
+				console.log('=============== Neat Song! ===============');
+			});
 		}
 	});
 
